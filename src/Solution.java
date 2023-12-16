@@ -12,19 +12,27 @@ class ParkingLot {
 	private int occupiedCompactSpots;
 	private int occupiedRegularSpots;
 	
-	private int numMotorcycles;
-	private int numCars;
+	private int numMotorcyclesInMotorcycleSpaces;
+	private int numMotorcyclesInCompactSpaces;
+	private int numMotorcyclesInRegularSpaces;
+	private int numCarsInCompactSpaces;
+	private int numCarsInRegularSpaces;
 	private int numVans;
 	
 	public ParkingLot(int motorcycleSpots, int compactSpots, int regularSpots) {
 		numMotorcycleSpots = motorcycleSpots;
 		numCompactSpots = compactSpots;
 		numRegularSpots = regularSpots;
+		
 		occupiedMotorcycleSpots = 0;
 		occupiedCompactSpots = 0;
 		occupiedRegularSpots = 0;
-		numMotorcycles = 0;
-		numCars = 0;
+		
+		numMotorcyclesInMotorcycleSpaces = 0;
+		numMotorcyclesInCompactSpaces = 0;
+		numMotorcyclesInRegularSpaces = 0;
+		numCarsInCompactSpaces = 0;
+		numCarsInRegularSpaces = 0;
 		numVans = 0;
 	}
 	
@@ -36,17 +44,17 @@ class ParkingLot {
 	public boolean addMotorcycle() {
 		if(!areMotorcycleSpotsFull()) {
 			//TODO: adjust motorcycle spot counts
-			numMotorcycles++;
+			numMotorcyclesInMotorcycleSpaces++;
 			occupiedMotorcycleSpots++;
 			return true;
 		}else if(!areCompactSpotsFull()) {
 			//TODO: adjust compact spot counts
-			numMotorcycles++;
+			numMotorcyclesInCompactSpaces++;
 			occupiedCompactSpots++;
 			return true;
 		}else if(!areRegularSpotsFull()) {
 			//TODO: adjust regular spot counts
-			numMotorcycles++;
+			numMotorcyclesInRegularSpaces++;
 			occupiedRegularSpots++;
 			return true;
 		}else {
@@ -61,12 +69,12 @@ class ParkingLot {
 	public boolean addCar() {
 		if(!areCompactSpotsFull()) {
 			//TODO: adjust compact spot counts
-			numCars++;
+			numCarsInCompactSpaces++;
 			occupiedCompactSpots++;
 			return true;
 		}else if(!areRegularSpotsFull()) {
 			//TODO: adjust regular spot counts
-			numCars++;
+			numCarsInRegularSpaces++;
 			occupiedRegularSpots++;
 			return true;
 		}else {
@@ -89,7 +97,48 @@ class ParkingLot {
 		}
 	}
 	
+	/**
+	 * Removes a motorcycle from the parking lot, if there is one.
+	 */
+	public void removeMotorcycle() {
+		if(numMotorcyclesInRegularSpaces > 0) {
+			numMotorcyclesInRegularSpaces--;
+			occupiedRegularSpots--;
+		}else if(numMotorcyclesInCompactSpaces > 0) {
+			numMotorcyclesInCompactSpaces--;
+			occupiedCompactSpots--;
+		}else if(numMotorcyclesInMotorcycleSpaces > 0) {
+			numMotorcyclesInMotorcycleSpaces--;
+			occupiedMotorcycleSpots--;
+		}
+	}
 	
+	/**
+	 * Removes a car from the parking lot, if there is one.
+	 */
+	public void removeCar() {
+		if(numCarsInRegularSpaces > 0) {
+			System.out.println("regular remove");
+			numCarsInRegularSpaces--;
+			occupiedRegularSpots--;
+		}else if(numCarsInCompactSpaces > 0) {
+			System.out.println("compact remove");
+			numCarsInCompactSpaces--;
+			occupiedCompactSpots--;
+		}
+	}
+	
+	/**
+	 * Removes a van from the parking lot, if there is one.
+	 */
+	public void removeVan() {
+		if(numVans > 0) {
+			numVans--;
+			occupiedRegularSpots-=3;
+		}
+	}
+	
+	//Getters
 	public int getTotalSpotsRemaining() { 
 		return getMotorcycleSpotsRemaining() + getCompactSpotsRemaining() + getRegularSpotsRemaining(); 
 	}
@@ -110,6 +159,7 @@ class ParkingLot {
 	public int getNumSpacesWithVans() {
 		return numVans * 3;
 	}
+
 	
 	public boolean isParkingLotFull() { 
 		return getTotalSpotsRemaining() == 0; 
